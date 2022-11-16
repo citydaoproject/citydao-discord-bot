@@ -8,6 +8,13 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
   ],
+	// Need to intialize Partials.GuildMember otherwise guildMemberUpdate
+	// will not fire for uncached members...
+	// 
+	// Otherwise this behavior:
+	// When the bot first starts up, the first update to a guild member (which
+	// should fire guildMemberUpdate) does not happen.
+
   partials: [
     Partials.GuildMember,
   ],
