@@ -1,5 +1,5 @@
 const axios = require("axios");
-let counter = 1;
+let counter;
 
 function checker(a, b) {
 	const oldMemberSize = a.roles.cache.size;
