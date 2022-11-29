@@ -1,60 +1,91 @@
+const axios = require("axios");
+const { Api_Key, Api_Username } = require("../config.json");
+const {
+	discord_citizen,
+	discord_founding,
+} = require("../groups.json");
+const { checker, addRemoveRole } = require("../utils.js");
+
 module.exports = {
 	name: "guildMemberUpdate",
 	async execute(oldMember, newMember) {
-		//console.log(oldMember, newMember);
-    
-    //var defaultHost = "https://forum.citydao.io/";
-    
-    /* 
+
+		const defaultHost = "forum.citydao.io";
+
+		// Counter to check whether role was ADDED or REMOVED.
+		// Counter = 1 (role is added)
+		// Counter = 0 (role is removed)
+		// Default behavior: bot will always consider the first event
+		// after start/restart on each user as a ROLE ADDED event.
+		let counter = 1;
+
+		// Check to see if the structure we called on is partial or not.
+		if (oldMember.partial) {
+			// If it's partial we will retrieve the missing data from the API.
+			// Note: this will prevent empty roles on oldMember after bot restart.
+			oldMember
+				.fetch()
+				.then((fullMember) => {
+					counter = checker(fullMember, newMember);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} else {
+			counter = checker(oldMember, newMember);
+		}
+
+		console.log(`counter: ${counter}`);
+
+		/* 
+    / For future references:
+    / MemberNickName = Discord nickname of the current user (string).
+    / MemberId = Discord ID of the current user (snowflake).
+    / MemberName = Discord username (if no username then nickname) of the current user (string).
+    */
+		const MemberNickName = newMember.nickname;
+		const MemberId = newMember.id;
+		const MemberName = newMember.displayName;
+
+		// Check whether discord user name exist on discourse/forum.
+		// API endpoint "Get a single user by username".
+		// METHOD: GET
+		//
+		//
+		const url = `https://${defaultHost}/u/${MemberName}.json`;
+		console.log(url);
+
+		const data = {
+			usernames: MemberName,
+		};
+		const putData = JSON.stringify(data);
+
+		const headers = {
+			"Content-Type": "application/json",
+			"Api-Key": Api_Key,
+			"Api-Username": Api_Username,
+		};
+
+		/* 
     / Grab object for the new role
     / newRoleId = ID of the changed Role
     / newRoleName = Name of the changed Role
     */
-    var newRole = newMember.roles.cache.difference(oldMember.roles.cache).last();
-    var newRoleId = newRole.id;
-    var newRoleName = newRole.name; 
-		//console.log(newRole);
+		const newRole = newMember.roles.cache
+			.difference(oldMember.roles.cache)
+			.last();
+		const { id: newRoleId, name: newRoleName } = newRole;
+
 		console.log(`Role ID: ${newRoleId}`);
 		console.log(`Role Name: ${newRoleName}`);
 
-		console.log(newMember.roles.cache);
-
-    /* 
-    / MemberNickName = Discord nickname of the current user (string)
-    / MemberId = Discord ID of the current user (snowflake)
-    / MemberName = Discord username (if no username then nickname) of the current user (string)
-    */ 
-    var MemberNickName = newMember.nickname;
-    var MemberId = newMember.id;
-    var MemberName = newMember.displayName;
-    console.log(`Nickname: ${MemberNickName}`);
-    console.log(`ID: ${MemberId}`);
-    console.log(`Name: ${MemberName}`);
-
-    // check whether we added or removed roles
-    newMemberSize = newMember.roles.cache.size;
-    oldMemberSize = oldMember.roles.cache.size;
-		console.log(`new size: ${newMemberSize}`);
-		console.log(`old size: ${oldMemberSize}`);
-		// needed to +1 for oldMemberSize due to @everyone role in discord
-    if(newMemberSize > oldMemberSize+1) {
-      // add logic for added role
-      console.log("role added");
-    } else {
-      // add logic for removed role
-      console.log("role removed");
-    };
-    // get user name (finish logic)
-    // user = `${defaultHost}/admin/users`
-
-    // function to compare roles
-    //function diffRole(arr1, arr2) {
-    //  return [...diff(arr1, arr2), ...diff(arr2, arr1)];
-    //
-    //  function diff(a, b) {
-    //    return a.filter(item => b.indexOf(item) === -1);
-    //  }
-    // }
+		if (newRoleName == "test-role-1") {
+			const postUrl = `https://${defaultHost}/groups/${discord_founding}/members.json`;
+			addRemoveRole(url, headers, data, putData, postUrl, newRoleName, counter);
+		} else if (newRoleName == "test-role-2") {
+			const postUrl = `https://${defaultHost}/groups/${discord_citizen}/members.json`;
+			addRemoveRole(url, headers, data, putData, postUrl, newRoleName, counter);
+		}
 
 	},
 };
