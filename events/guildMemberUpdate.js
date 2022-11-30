@@ -12,11 +12,13 @@ module.exports = {
 
 		const defaultHost = "forum.citydao.io";
 
-		// Counter to check whether role was ADDED or REMOVED.
-		// Counter = 1 (role is added)
-		// Counter = 0 (role is removed)
-		// Default behavior: bot will always consider the first event
-		// after start/restart on each user as a ROLE ADDED event.
+		/*
+    / Counter to check whether role was ADDED or REMOVED.
+		/ Counter = 1 (role is added)
+		/ Counter = 0 (role is removed)
+		/ Default behavior: bot will always consider the first event
+		/ after start/restart on each user as a ROLE ADDED event.
+    */
 		let counter = 1;
 
 		// Check to see if the structure we called on is partial or not.
@@ -35,28 +37,27 @@ module.exports = {
 			counter = checker(oldMember, newMember);
 		}
 
-		console.log(`counter: ${counter}`);
-
 		/* 
     / For future references:
-    / MemberNickName = Discord nickname of the current user (string).
-    / MemberId = Discord ID of the current user (snowflake).
-    / MemberName = Discord username (if no username then nickname) of the current user (string).
+    / memberNickName = Discord nickname of the current user (string).
+    / memberId = Discord ID of the current user (snowflake).
+    / memberName = Discord username (if no username then nickname) of the current user (string).
     */
-		const MemberNickName = newMember.nickname;
-		const MemberId = newMember.id;
-		const MemberName = newMember.displayName;
+    const { displayName: memberName,
+            nickname: memberNickName,
+            id: memberId 
+          } = newMember; 
 
 		// Check whether discord user name exist on discourse/forum.
 		// API endpoint "Get a single user by username".
 		// METHOD: GET
 		//
 		//
-		const url = `https://${defaultHost}/u/${MemberName}.json`;
+		const url = `https://${defaultHost}/u/${memberName}.json`;
 		console.log(url);
 
 		const data = {
-			usernames: MemberName,
+			usernames: memberName,
 		};
 		const putData = JSON.stringify(data);
 
@@ -86,6 +87,5 @@ module.exports = {
 			const postUrl = `https://${defaultHost}/groups/${discord_citizen}/members.json`;
 			addRemoveRole(url, headers, data, putData, postUrl, newRoleName, counter);
 		}
-
 	},
 };

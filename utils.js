@@ -1,5 +1,4 @@
 const axios = require("axios");
-let counter;
 
 function checker(a, b) {
 	const oldMemberSize = a.roles.cache.size;
@@ -8,19 +7,19 @@ function checker(a, b) {
 	console.log(`new size: ${newMemberSize}`);
 
 	/* 
-/ Note: 
-/ At BOT restart OldMember will only come with the @everyone role.
-/ calling fetch() on partial completes the structure... which is NewMember
-/ This means oldMemberSize and newMemberSize will be the same on BOT start.
-/ Quick fix:
-/ 1. if(newMemberSize >= oldMemberSize)
-/   - first bot event will always be "role added" action.
-/   - subsequent events will behave normally.
-/ 
-/ 2. if(newMemberSize > oldMemberSize)
-/   - first bot event will always be a "role removed" action.
-/   - subsequent events will be have normally.
-*/
+	/ Note: 
+	/ At BOT restart OldMember will only come with the @everyone role.
+	/ calling fetch() on partial completes the structure... which is NewMember
+	/ This means oldMemberSize and newMemberSize will be the same on BOT start.
+	/ Quick fix:
+	/ 1. if(newMemberSize >= oldMemberSize)
+	/   - first bot event will always be "role added" action.
+	/   - subsequent events will behave normally.
+	/ 
+	/ 2. if(newMemberSize > oldMemberSize)
+	/   - first bot event will always be a "role removed" action.
+	/   - subsequent events will be have normally.
+	*/
 	if (newMemberSize >= oldMemberSize) {
 		// add logic for added role
 		console.log("role added");
