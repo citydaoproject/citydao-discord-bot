@@ -69,7 +69,7 @@ npm test
 
 ### Contributors
 
-👤 Thank you so much to**[Tuncay](https://github.com/)** for giving awesome contributions to the project.
+👤 Thank you so much to [Tuncay](https://github.com/trkaplan) for giving awesome contributions to the project.
 
 ## 🤝 Contributing
 
