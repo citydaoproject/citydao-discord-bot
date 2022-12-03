@@ -13,12 +13,12 @@ module.exports = {
 		const defaultHost = "forum.citydao.io";
 
 		/*
-    / Counter to check whether role was ADDED or REMOVED.
+    		/ Counter to check whether role was ADDED or REMOVED.
 		/ Counter = 1 (role is added)
 		/ Counter = 0 (role is removed)
 		/ Default behavior: bot will always consider the first event
 		/ after start/restart on each user as a ROLE ADDED event.
-    */
+	    	*/
 		let counter = 1;
 
 		// Check to see if the structure we called on is partial or not.
@@ -38,15 +38,15 @@ module.exports = {
 		}
 
 		/* 
-    / For future references:
-    / memberNickName = Discord nickname of the current user (string).
-    / memberId = Discord ID of the current user (snowflake).
-    / memberName = Discord username (if no username then nickname) of the current user (string).
-    */
-    const { displayName: memberName,
-            nickname: memberNickName,
-            id: memberId 
-          } = newMember; 
+    		/ For future references:
+  	 	/ memberNickName = Discord nickname of the current user (string).
+ 	   	/ memberId = Discord ID of the current user (snowflake).
+ 	   	/ memberName = Discord username (if no username then nickname) of the current user (string).
+    		*/
+    		const { displayName: memberName,
+            	nickname: memberNickName,
+            	id: memberId 
+          	} = newMember; 
 
 		// Check whether discord user name exist on discourse/forum.
 		// API endpoint "Get a single user by username".
@@ -68,10 +68,10 @@ module.exports = {
 		};
 
 		/* 
-    / Grab object for the new role
-    / newRoleId = ID of the changed Role
-    / newRoleName = Name of the changed Role
-    */
+    		/ Grab object for the new role
+    		/ newRoleId = ID of the changed Role
+    		/ newRoleName = Name of the changed Role
+    		*/
 		const newRole = newMember.roles.cache
 			.difference(oldMember.roles.cache)
 			.last();
