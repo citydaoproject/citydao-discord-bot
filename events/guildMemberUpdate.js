@@ -80,10 +80,10 @@ module.exports = {
 		console.log(`Role ID: ${newRoleId}`);
 		console.log(`Role Name: ${newRoleName}`);
 
-		if (newRoleName == "test-role-1") {
+		if (newRoleName == "Founding Citizen") {
 			const postUrl = `https://${defaultHost}/groups/${discord_founding}/members.json`;
 			addRemoveRole(url, headers, data, putData, postUrl, newRoleName, counter);
-		} else if (newRoleName == "test-role-2") {
+		} else if (newRoleName == "Citizen") {
 			const postUrl = `https://${defaultHost}/groups/${discord_citizen}/members.json`;
 			addRemoveRole(url, headers, data, putData, postUrl, newRoleName, counter);
 		}
