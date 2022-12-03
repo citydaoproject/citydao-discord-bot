@@ -1,8 +1,8 @@
 <h1 align="center"> DiscordBot-DiscourseGroup-SyncBot 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-v3.3-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-v1.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/NamVr/DiscordBot-Template#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-no-red.svg" />
   </a>
   <a href="https://github.com/NamVr/DiscordBot-Template/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
@@ -22,7 +22,7 @@ In-built useful and flexible features, such as
 
 #### • **Event based driven role changes**
 
-#### • **Jest Discordjs Tesing framework**
+#### • **Jest Discordjs Tesing framework** --> WORK IN PROGRESS
 
 
 # Quickstart
