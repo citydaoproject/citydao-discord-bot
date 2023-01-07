@@ -72,7 +72,11 @@ client.once(Events.ClientReady, (c) => {
           data: data,
         };
 
-        const response = await axios(deleteConfig);
+        try {
+          const response = await axios(deleteConfig);
+        } catch (error) {
+          console.log(error.response.data.errors);
+        }
       }
 
       // Add discourse group membership
@@ -97,8 +101,13 @@ client.once(Events.ClientReady, (c) => {
           data: data,
         };
 
-        const response = await axios(putConfig);
+        try {
+          const response = await axios(putConfig);
+        } catch (error) {
+          console.log(`User "${memberName}" => ${error.response.data.errors}`);
+        }
       }
+      process.exit();
     })
 
     .catch(console.error);
