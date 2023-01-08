@@ -38,9 +38,8 @@ client.once(Events.ClientReady, (c) => {
         method: "get",
         url: "https://forum.citydao.io/groups/discord_citizen/members.json",
         header: {
-          "Api-Key":
-            "d57dc8c725f0d37cdca9fb6a53dfd310a40359695469811c077cc84ec318167e",
-          "Api-Username": "system",
+          "Api-Key": process.env.API_KEY,
+          "Api-Username": process.env.API_USERNAME,
           "Content-Type": "application/json",
         },
       };
@@ -64,9 +63,8 @@ client.once(Events.ClientReady, (c) => {
           method: "delete",
           url: "https://forum.citydao.io/groups/77/members.json",
           headers: {
-            "Api-Key":
-              "d57dc8c725f0d37cdca9fb6a53dfd310a40359695469811c077cc84ec318167e",
-            "Api-Username": "system",
+            "Api-Key": process.env.API_KEY,
+            "Api-Username": process.env.API_USERNAME,
             "Content-Type": "application/json",
           },
           data: data,
@@ -93,9 +91,8 @@ client.once(Events.ClientReady, (c) => {
           method: "put",
           url: "https://forum.citydao.io/groups/77/members.json",
           headers: {
-            "Api-Key":
-              "d57dc8c725f0d37cdca9fb6a53dfd310a40359695469811c077cc84ec318167e",
-            "Api-Username": "system",
+            "Api-Key": process.env.API_KEY,
+            "Api-Username": process.env.API_USERNAME,
             "Content-Type": "application/json",
           },
           data: data,
@@ -113,6 +110,6 @@ client.once(Events.ClientReady, (c) => {
     .catch(console.error);
 });
 
-client.login(token);
+client.login(process.env.TOKEN);
 
 // TODO: Convert Promise to Async/Await
