@@ -42,7 +42,7 @@ jobs:
           API_USERNAME: ${{ secrets.API_USERNAME }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          cat "$TOKEN"
+          echo "$TOKEN"
 
       # Runs the installations script
       - name: Install dependencies
