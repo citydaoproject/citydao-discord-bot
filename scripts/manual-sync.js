@@ -1,6 +1,4 @@
 const { Client, Events, GatewayIntentBits, Partials } = require("discord.js");
-const { token, Api_Key, Api_Username } = require("../config.json");
-const { addRemoveRole } = require("../utils.js");
 const axios = require("axios");
 
 const client = new Client({
