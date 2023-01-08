@@ -14,6 +14,10 @@ on:
   push:
     branches: [main]
 
+env:
+  API_KEY: "${{ secrets.API_KEY }}"
+  API_USERNAME: "${{ secrets.API_USERNAME }}"
+  TOKEN: "${{ secrets.TOKEN }}"
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "cron"
@@ -29,6 +33,12 @@ jobs:
         with:
           node-version: "16.x"
 
+      # This command is just an example to show your secret being printed
+      # Ensure you remove any print statements of your secrets. GitHub does
+      # not hide secrets that use this workaround.
+      - name: Test printing your secret (Remove this step in production)
+        run: cat $HOME/secrets/my_secret.json
+
       # Runs the installations script
       - name: Install dependencies
         run: npm install
@@ -36,13 +46,3 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run discord/Discourse Role sync
         run: npm run sync
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
-          API_USERNAME: ${{ secrets.API_USERNAME }}
-          TOKEN: ${{ secrets.TOKEN }}
-
-      # This command is just an example to show your secret being printed
-      # Ensure you remove any print statements of your secrets. GitHub does
-      # not hide secrets that use this workaround.
-      - name: Test printing your secret (Remove this step in production)
-        run: cat $HOME/secrets/my_secret.json
