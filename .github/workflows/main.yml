@@ -37,13 +37,12 @@ jobs:
       # Ensure you remove any print statements of your secrets. GitHub does
       # not hide secrets that use this workaround.
       - name: Test printing your secret
-        shell: bash
         env:
-          API_KEY: "${{ secrets.API_KEY }}"
-          API_USERNAME: "${{ secrets.API_USERNAME }}"
-          TOKEN: "${{ secrets.TOKEN }}"
-          run: |
-            cat "$TOKEN"
+          API_KEY: ${{ secrets.API_KEY }}
+          API_USERNAME: ${{ secrets.API_USERNAME }}
+          TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          cat "$TOKEN"
 
       # Runs the installations script
       - name: Install dependencies
