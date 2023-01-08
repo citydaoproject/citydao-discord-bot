@@ -37,4 +37,4 @@ jobs:
        
       # Runs a single command using the runners shell
       - name: Run discord/Discourse Role sync
-        run: node scripts/manual-sync.js 
+        run: npm run sync
