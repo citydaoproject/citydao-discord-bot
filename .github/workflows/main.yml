@@ -5,11 +5,14 @@ name:
 
   # Controls when the workflow will run
 on:
-  # Triggers the workflow every 5 minutes
+  # Triggers the workflow every time-interval
   schedule:
     # Run every day at 12:00am (UTC)
-    # - cron: '0 * * * *'
-    - cron: "*/5 * * * *"
+    # - cron: "0 * * * *"
+    # Run every hour
+    - cron: "0 * * * *"
+    # Run Every 5 min
+    # - cron: "*/5 * * * *"
 
   push:
     branches: [main]
