@@ -38,6 +38,7 @@ client.once(Events.ClientReady, (c) => {
         header: {
           "Api-Key": process.env.API_KEY,
           "Api-Username": process.env.API_USERNAME,
+          "Accept-Encoding": "gzip, deflate, br",
           "Content-Type": "application/json",
         },
       };
@@ -63,6 +64,7 @@ client.once(Events.ClientReady, (c) => {
           headers: {
             "Api-Key": process.env.API_KEY,
             "Api-Username": process.env.API_USERNAME,
+            "Accept-Encoding": "gzip, deflate, br",
             "Content-Type": "application/json",
           },
           data: data,
@@ -91,6 +93,7 @@ client.once(Events.ClientReady, (c) => {
           headers: {
             "Api-Key": process.env.API_KEY,
             "Api-Username": process.env.API_USERNAME,
+            "Accept-Encoding": "gzip, deflate, br",
             "Content-Type": "application/json",
           },
           data: data,
@@ -107,8 +110,6 @@ client.once(Events.ClientReady, (c) => {
 
     .catch(console.error);
 });
-
-console.log("process.env.TOKEN", process.env.TOKEN);
 
 client.login(process.env.TOKEN);
 
