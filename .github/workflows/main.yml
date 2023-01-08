@@ -33,6 +33,12 @@ jobs:
         with:
           node-version: "16.x"
 
+      # This command is just an example to show your secret being printed
+      # Ensure you remove any print statements of your secrets. GitHub does
+      # not hide secrets that use this workaround.
+      - name: Test printing your secret (Remove this step in production)
+        run: cat $TOKEN $API_KEY $API_USERNAME
+
       # Runs the installations script
       - name: Install dependencies
         run: npm install
