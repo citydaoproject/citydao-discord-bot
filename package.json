@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "sync": "node scripts/manual-sync.js",
     "test": "jest"
   },
   "keywords": [],
