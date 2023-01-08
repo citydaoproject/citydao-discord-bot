@@ -108,6 +108,8 @@ client.once(Events.ClientReady, (c) => {
     .catch(console.error);
 });
 
+console.log("process.env.TOKEN", process.env.TOKEN);
+
 client.login(process.env.TOKEN);
 
 // TODO: Convert Promise to Async/Await
