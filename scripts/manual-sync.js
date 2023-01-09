@@ -1,6 +1,9 @@
 const { Client, Events, GatewayIntentBits, Partials } = require("discord.js");
 const axios = require("axios");
 
+// Get CityDAO Guild
+const SERVER_ID = "860356969521217536";
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
   // Need to intialize Partials.GuildMember otherwise guildMemberUpdate
@@ -16,7 +19,7 @@ const client = new Client({
 client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 
-  const guild = c.guilds.cache.get("1039885252920873052");
+  const guild = c.guilds.cache.get(SERVER_ID);
 
   console.log(`guilds: ${guild}`);
 
