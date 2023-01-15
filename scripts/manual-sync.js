@@ -2,7 +2,7 @@ const { Client, Events, GatewayIntentBits, Partials } = require("discord.js");
 const axios = require("axios");
 const axiosThrottle = require("axios-request-throttle");
 
-axiosThrottle.use(axios, { requestsPerSecond: 2 });
+axiosThrottle.use(axios, { requestsPerSecond: 1 });
 
 // Get CityDAO Guild
 const SERVER_ID = "860356969521217536";
