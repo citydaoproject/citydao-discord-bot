@@ -1,5 +1,8 @@
 const { Client, Events, GatewayIntentBits, Partials } = require("discord.js");
 const axios = require("axios");
+const axiosThrottle = require("axios-request-throttle");
+
+axiosThrottle.use(axios, { requestsPerSecond: 5 });
 
 // Get CityDAO Guild
 const SERVER_ID = "860356969521217536";
@@ -105,6 +108,10 @@ client.once(Events.ClientReady, (c) => {
         try {
           const response = await axios(putConfig);
         } catch (error) {
+          if (error.response.code === 429) {
+            console.log("Rate limited, waiting 10 seconds");
+          }
+
           console.log(`User "${memberName}" => ${error.response.data.errors}`);
         }
       }
