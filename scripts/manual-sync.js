@@ -108,11 +108,13 @@ client.once(Events.ClientReady, (c) => {
         try {
           const response = await axios(putConfig);
         } catch (error) {
-          if (error.response.code === 429) {
+          if (error?.response?.code === 429) {
             console.log("Rate limited, waiting 10 seconds");
           }
 
-          console.log(`User "${memberName}" => ${error.response.data.errors}`);
+          console.log(
+            `User "${memberName}" => ${error?.response?.data?.errors}`
+          );
         }
       }
       process.exit();
