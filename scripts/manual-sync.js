@@ -39,49 +39,38 @@ client.once(Events.ClientReady, (c) => {
         username: m.user.username,
       }));
 
-      // delete all members from discourse group that are not in the discord
+      ////////////////////////////////////////////////////////////////////////////////
+      // Get all members in discourse group
+      const getConfig = {
+        method: "get",
+        url: "https://forum.citydao.io/groups/discord_citizen/members.json?limit=1000",
+        header: {
+          "Api-Key": process.env.API_KEY,
+          "Api-Username": process.env.API_USERNAME,
+          "Accept-Encoding": "gzip, deflate, br",
+          "Content-Type": "application/json",
+        },
+      };
 
-      const deleteRoles = discourseMembers
-        .filter((x) => !discordRoleMembers.includes(x))
-        .join(",");
+      const respone = await axios(getConfig);
 
-      const data = JSON.stringify({
-        usernames: deleteRoles,
-      });
+      const discourseGroupMembers = respone.data.members.map((m) => ({
+        id: m.id,
+        username: m.username,
+      }));
 
-      if (deleteRoles) {
-        const deleteConfig = {
-          method: "delete",
-          url: "https://forum.citydao.io/groups/77/members.json",
-          headers: {
-            "Api-Key": process.env.API_KEY,
-            "Api-Username": process.env.API_USERNAME,
-            "Accept-Encoding": "gzip, deflate, br",
-            "Content-Type": "application/json",
-          },
-          data: data,
-        };
+      /////////////////////////////////////////////////////////////////////////////////
 
-        try {
-          const response = await axios(deleteConfig);
-        } catch (error) {
-          console.log(error.response.data.errors);
-        }
-      }
-
-      // Add discourse group membership
-
-      // const addRoles = discordRoleMembers.filter(
-      //   (x) => !discourseMembers.includes(x)
-      // );
-
+      // create discourse object with everyone in the discord role
+      const discordDiscourseMapping = [];
       for (const discordMember of discordRoleMembers) {
+        let discourseObject = {};
         const memberId = discordMember.id;
         const memberName = discordMember.username;
 
         const getConfig = {
-          method: "put",
-          url: `https://forum.citydao.io/u/by-external/discord/${memberId}.json`,
+          method: "get",
+          url: `https://forum.citydao.io/u/by-external/discord/${memberId}.json?limit=1000`,
           headers: {
             "Api-Key": process.env.API_KEY,
             "Api-Username": process.env.API_USERNAME,
@@ -92,6 +81,14 @@ client.once(Events.ClientReady, (c) => {
 
         try {
           const response = await axios(getConfig);
+
+          discourseObject["id"] = response.data.user.id;
+          discourseObject["username"] = response.data.user.username;
+          discourseObject["isInGroup"] = response.data.user.groups.some(
+            (obj) => obj.id === 77
+          );
+
+          discordDiscourseMapping.push(discourseObject);
         } catch (error) {
           if (error?.response?.code === 429) {
             console.log("Rate limited, waiting 10 seconds");
@@ -102,46 +99,85 @@ client.once(Events.ClientReady, (c) => {
           }
 
           console.log(
-            `User "${memberName}": Get Error => ${error?.response?.data?.errors}`
+            `User ${memberName} and userId ${memberId}": Get Error => ${error?.response?.data?.errors}`
           );
-          continue;
         }
+      }
 
-        // Check if user is in group
+      console.log(discordDiscourseMapping);
 
-        const groups = response.data.user.groups;
-        if (Array.some(groups, (g) => g.id === 77)) {
-          console.log(`User "${memberName}" is already in group`);
-        }
+      // delete all members from discourse group that are not in the discord
 
-        const data = JSON.stringify({
-          usernames: memberName,
-        });
+      const discourseMappingIdList = discordDiscourseMapping.map((m) => m.id);
+      let deleteRoles = discourseGroupMembers.filter(
+        (x) => !discourseMappingIdList.includes(x.id)
+      );
 
-        const putConfig = {
-          method: "put",
-          url: "https://forum.citydao.io/groups/77/members.json",
+      deleteRoles = deleteRoles.map((m) => m.username).join(",");
+
+      // format delete data
+
+      const deleteData = JSON.stringify({
+        usernames: deleteRoles,
+      });
+
+      if (deleteRoles) {
+        const deleteConfig = {
+          method: "delete",
+          url: "https://forum.citydao.io/groups/77/members.json?limit=1000",
           headers: {
             "Api-Key": process.env.API_KEY,
             "Api-Username": process.env.API_USERNAME,
             "Accept-Encoding": "gzip, deflate, br",
             "Content-Type": "application/json",
           },
-          data: data,
+          data: deleteData,
+        };
+
+        try {
+          const response = await axios(deleteConfig);
+        } catch (error) {
+          console.log(error.response.data.errors);
+        }
+      }
+
+      // Add discourse group membership tht are not in the discourse group
+
+      const discourseGroupMembersIdList = discourseGroupMembers.map(
+        (m) => m.id
+      );
+
+      let addRoles = discordDiscourseMapping.filter(
+        (x) => !discourseGroupMembersIdList.includes(x.id)
+      );
+
+      addRoles = addRoles.map((m) => m.username).join(",");
+      // addRoles = addRoles.map((m) => m.username);
+
+      const putData = JSON.stringify({
+        usernames: addRoles,
+      });
+
+      if (addRoles) {
+        const putConfig = {
+          method: "put",
+          url: "https://forum.citydao.io/groups/77/members.json?limit=1000",
+          headers: {
+            "Api-Key": process.env.API_KEY,
+            "Api-Username": process.env.API_USERNAME,
+            "Accept-Encoding": "gzip, deflate, br",
+            "Content-Type": "application/json",
+          },
+          data: putData,
         };
 
         try {
           const response = await axios(putConfig);
         } catch (error) {
-          if (error?.response?.code === 429) {
-            console.log("Rate limited, waiting 10 seconds");
-          }
-
-          console.log(
-            `User "${memberName}" => ${error?.response?.data?.errors}`
-          );
+          console.log(error?.response?.data?.errors);
         }
       }
+
       process.exit();
     })
 
