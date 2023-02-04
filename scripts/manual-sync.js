@@ -34,24 +34,10 @@ client.once(Events.ClientReady, (c) => {
       const role = guild.roles.cache.find((r) => r.name === "Citizen"); //the role to check
       const roleMembers = members.filter((m) => m.roles.cache.has(role.id)); // array of user IDs who have the role
 
-      const discordRoleMembers = roleMembers.map((m) => m.user.username);
-
-      // get all members from discourse group
-
-      const getConfig = {
-        method: "get",
-        url: "https://forum.citydao.io/groups/discord_citizen/members.json",
-        header: {
-          "Api-Key": process.env.API_KEY,
-          "Api-Username": process.env.API_USERNAME,
-          "Accept-Encoding": "gzip, deflate, br",
-          "Content-Type": "application/json",
-        },
-      };
-
-      const respone = await axios(getConfig);
-
-      const discourseMembers = respone.data.members.map((m) => m.username);
+      const discordRoleMembers = roleMembers.map((m) => ({
+        id: m.user.id,
+        username: m.user.username,
+      }));
 
       // delete all members from discourse group that are not in the discord
 
@@ -85,10 +71,49 @@ client.once(Events.ClientReady, (c) => {
 
       // Add discourse group membership
 
-      const addRoles = discordRoleMembers.filter(
-        (x) => !discourseMembers.includes(x)
-      );
-      for (const memberName of addRoles) {
+      // const addRoles = discordRoleMembers.filter(
+      //   (x) => !discourseMembers.includes(x)
+      // );
+
+      for (const discordMember of discordRoleMembers) {
+        const memberId = discordMember.id;
+        const memberName = discordMember.username;
+
+        const getConfig = {
+          method: "put",
+          url: `https://forum.citydao.io/u/by-external/discord/${memberId}.json`,
+          headers: {
+            "Api-Key": process.env.API_KEY,
+            "Api-Username": process.env.API_USERNAME,
+            "Accept-Encoding": "gzip, deflate, br",
+            "Content-Type": "application/json",
+          },
+        };
+
+        try {
+          const response = await axios(getConfig);
+        } catch (error) {
+          if (error?.response?.code === 429) {
+            console.log("Rate limited, waiting 10 seconds");
+          }
+
+          if (error?.response?.code === 404) {
+            console.log("User not found, skipping");
+          }
+
+          console.log(
+            `User "${memberName}": Get Error => ${error?.response?.data?.errors}`
+          );
+          continue;
+        }
+
+        // Check if user is in group
+
+        const groups = response.data.user.groups;
+        if (Array.some(groups, (g) => g.id === 77)) {
+          console.log(`User "${memberName}" is already in group`);
+        }
+
         const data = JSON.stringify({
           usernames: memberName,
         });
